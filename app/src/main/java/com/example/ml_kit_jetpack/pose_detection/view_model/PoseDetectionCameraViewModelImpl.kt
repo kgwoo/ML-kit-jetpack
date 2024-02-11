@@ -12,6 +12,8 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.Recorder
+import androidx.camera.video.VideoCapture
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -43,6 +45,7 @@ class PoseDetectionCameraViewModelImpl(
     private var imageAnalysis: ImageAnalysis? = null
     private var needUpdateGraphicOverlayImageSourceInfo: Boolean = true
     private var bitmap: android.graphics.Bitmap? = null
+    private var videoCapture: VideoCapture<Recorder>? = null
 
     override fun startPoseDetection(context: Context, previewView: PreviewView) {
         requestAllPermission(context)
@@ -64,9 +67,19 @@ class PoseDetectionCameraViewModelImpl(
 //            videoCapture = createVideoCaptureUseCase(context)
 //        }
 
-        cameraProviderLiveData.value?.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalysis)
+        cameraProviderLiveData.value?.bindToLifecycle(
+            lifecycleOwner,
+            cameraSelector,
+            preview,
+            imageAnalysis
+        )
     }
 
+    override fun onTabSwitchCamera(lensFacing: Int, context: Context, previewView: PreviewView) {
+        this.lensFacing = lensFacing
+        this.videoCapture = null
+        startPoseDetection(context, previewView)
+    }
 
     private fun requestAllPermission(context: Context) {
         if (!hasRequiredPermissions(context)) {
@@ -120,9 +133,17 @@ class PoseDetectionCameraViewModelImpl(
                     Log.d("CameraViewModel", "isImageFlipped: $isImageFlipped")
                     val rotationDegrees = imageProxy.imageInfo.rotationDegrees
                     if (rotationDegrees == 0 || rotationDegrees == 180) {
-                        graphicOverlay.setImageSourceInfo(imageProxy.width, imageProxy.height, isImageFlipped)
+                        graphicOverlay.setImageSourceInfo(
+                            imageProxy.width,
+                            imageProxy.height,
+                            isImageFlipped
+                        )
                     } else {
-                        graphicOverlay.setImageSourceInfo(imageProxy.height, imageProxy.width, isImageFlipped)
+                        graphicOverlay.setImageSourceInfo(
+                            imageProxy.height,
+                            imageProxy.width,
+                            isImageFlipped
+                        )
                     }
                     needUpdateGraphicOverlayImageSourceInfo = false
                 }
