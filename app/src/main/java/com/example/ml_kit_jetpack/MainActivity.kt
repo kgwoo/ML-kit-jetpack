@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.ml_kit_jetpack.pose_detection.view.PoseDetectionCamera
 import com.example.ml_kit_jetpack.ui.theme.MlkitjetpackTheme
+import com.example.ml_kit_jetpack.`gloabl-navigation-bar`.GlobalNavigationBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PoseDetectionCamera()
+                    GlobalNavigationBar(poseDetectionCamera = {PoseDetectionCamera()})
                 }
             }
         }
