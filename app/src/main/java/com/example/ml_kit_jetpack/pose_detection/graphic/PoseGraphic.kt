@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 
@@ -69,15 +71,15 @@ class PoseGraphic(
         val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
         // Face
-        drawLine(canvas, nose, leftEyeInner, whiteBrush)
-        drawLine(canvas, leftEyeInner, leftEye, whiteBrush)
-        drawLine(canvas, leftEye, leftEyeOuter, whiteBrush)
-        drawLine(canvas, leftEyeOuter, leftEar, whiteBrush)
-        drawLine(canvas, nose, rightEyeInner, whiteBrush)
-        drawLine(canvas, rightEyeInner, rightEye, whiteBrush)
-        drawLine(canvas, rightEye, rightEyeOuter, whiteBrush)
-        drawLine(canvas, rightEyeOuter, rightEar, whiteBrush)
-        drawLine(canvas, leftMouth, rightMouth, whiteBrush)
+//        drawLine(canvas, nose, leftEyeInner, whiteBrush)
+//        drawLine(canvas, leftEyeInner, leftEye, whiteBrush)
+//        drawLine(canvas, leftEye, leftEyeOuter, whiteBrush)
+//        drawLine(canvas, leftEyeOuter, leftEar, whiteBrush)
+//        drawLine(canvas, nose, rightEyeInner, whiteBrush)
+//        drawLine(canvas, rightEyeInner, rightEye, whiteBrush)
+//        drawLine(canvas, rightEye, rightEyeOuter, whiteBrush)
+//        drawLine(canvas, rightEyeOuter, rightEar, whiteBrush)
+//        drawLine(canvas, leftMouth, rightMouth, whiteBrush)
 
         drawLine(canvas, leftShoulder, rightShoulder, whiteBrush)
         drawLine(canvas, leftHip, rightHip, whiteBrush)
@@ -109,9 +111,12 @@ class PoseGraphic(
         drawLine(canvas, rightHeel, rightFootIndex, rightBrush)
 
         // Draw all the points
+        val opacityBrush = SolidColor(Color(255, 255, 255, 0))
         for (landmark in landmarks) {
-            drawPoint(canvas, landmark, whiteBrush)
+            drawPoint(canvas, landmark, opacityBrush)
         }
+
+
 
         // Draw inFrameLikelihood for all points
 //        if (showInFrameLikelihood) {
@@ -131,6 +136,20 @@ class PoseGraphic(
         // maybeUpdateBrushColor(Brush, canvas, point.z)
 //        canvas.drawCircle(translateX(point.x), translateY(point.y), DOT_RADIUS, Brush)
         canvas.drawCircle(brush = paint,radius = DOT_RADIUS, center = Offset(translateX(point.x), translateY(point.y)))
+
+
+//        // Draw number 1 in the center
+//        val text = "1"
+//        val textSize = 30.0f // Adjust the size as needed
+//        val textWidth = paint.measureText(text)
+//        val textX = translateX(point.x) - textWidth / 2
+//        val textY = translateY(point.y) + textSize / 2
+//        canvas.drawText(
+//            text = text,
+//            color = Color.Black, // Adjust the color as needed
+//            fontSize = textSize,
+//            topLeft = Offset(textX, textY)
+//        )
     }
 
     private fun drawLine(
